@@ -12,9 +12,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,8 +25,8 @@ import androidx.core.content.ContextCompat;
 
 import io.agora.openlive.R;
 
-public class MainActivity extends BaseActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class ChannelRegisterActivity extends BaseActivity {
+
     private static final int MIN_INPUT_METHOD_HEIGHT = 200;
     private static final int ANIM_DURATION = 200;
 
@@ -45,8 +43,8 @@ public class MainActivity extends BaseActivity {
     private int mLastVisibleHeight = 0;
     private RelativeLayout mBodyLayout;
     private int mBodyDefaultMarginTop;
-    private EditText mTopicEdit;
-    private TextView mStartBtn;
+    private EditText channelNumber, channelPassword;
+    private TextView registerBtn;
     private ImageView mLogo;
 
     private Animator.AnimatorListener mLogoAnimListener = new Animator.AnimatorListener() {
@@ -84,7 +82,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            mStartBtn.setEnabled(!TextUtils.isEmpty(editable));
+            registerBtn.setEnabled(!TextUtils.isEmpty(editable));
         }
     };
 
@@ -104,15 +102,6 @@ public class MainActivity extends BaseActivity {
         boolean inputShown = mDisplayMetrics.heightPixels - visibleHeight > MIN_INPUT_METHOD_HEIGHT;
         mLastVisibleHeight = visibleHeight;
 
-        // Log.i(TAG, "onGlobalLayout:" + inputShown +
-        //        "|" + getWindow().getDecorView().getRootView().getViewTreeObserver());
-
-        // There is no official way to determine whether the
-        // input method dialog has already shown.
-        // This is a workaround, and if the visible content
-        // height is significantly less than the screen height,
-        // we should know that the input method dialog takes
-        // up some screen space.
         if (inputShown) {
             if (mLogo.getVisibility() == View.VISIBLE) {
                 mBodyLayout.animate().translationYBy(-mLogo.getMeasuredHeight())
@@ -128,7 +117,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_room_register);
         initUI();
     }
 
@@ -136,11 +125,15 @@ public class MainActivity extends BaseActivity {
         mBodyLayout = findViewById(R.id.middle_layout);
         mLogo = findViewById(R.id.main_logo);
 
-        mTopicEdit = findViewById(R.id.topic_edit);
-        mTopicEdit.addTextChangedListener(mTextWatcher);
+        channelNumber = findViewById(R.id.topic_edit_channel_number);
+        channelPassword = findViewById(R.id.topic_edit_channel_password);
+        channelNumber.addTextChangedListener(mTextWatcher);
 
-        mStartBtn = findViewById(R.id.start_broadcast_button);
-        if (TextUtils.isEmpty(mTopicEdit.getText())) mStartBtn.setEnabled(false);
+        registerBtn = findViewById(R.id.register_button);
+        if (TextUtils.isEmpty(channelNumber.getText())) {
+            registerBtn.setEnabled(false);
+        }
+
     }
 
     @Override
@@ -172,22 +165,22 @@ public class MainActivity extends BaseActivity {
 
         // The width of the start button is roughly 0.72
         // times the width of the screen
-        mStartBtn = findViewById(R.id.start_broadcast_button);
-        param = (RelativeLayout.LayoutParams) mStartBtn.getLayoutParams();
+        registerBtn = findViewById(R.id.register_button);
+        param = (RelativeLayout.LayoutParams) registerBtn.getLayoutParams();
         param.width = (int) (mDisplayMetrics.widthPixels * 0.72);
-        mStartBtn.setLayoutParams(param);
+        registerBtn.setLayoutParams(param);
+    }
+
+    public void onLiveStringNowClicked() {
+
+        checkPermission();
+
+        Intent i = new Intent(ChannelRegisterActivity.this, RoleActivity.class);
+        startActivity(i);
     }
 
     public void onSettingClicked(View view) {
         Intent i = new Intent(this, SettingsActivity.class);
-        startActivity(i);
-    }
-
-    public void onStartBroadcastClicked(View view) {
-        checkPermission();
-    }
-    public void onRegisterClicked (View view) {
-        Intent i = new Intent(MainActivity.this, ChannelRegisterActivity.class);
         startActivity(i);
     }
 
@@ -240,13 +233,13 @@ public class MainActivity extends BaseActivity {
     private void closeImeDialogIfNeeded() {
         InputMethodManager manager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.hideSoftInputFromWindow(mTopicEdit.getWindowToken(),
+        manager.hideSoftInputFromWindow(channelNumber.getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public void gotoRoleActivity() {
-        Intent intent = new Intent(MainActivity.this, RoleActivity.class);
-        String room = mTopicEdit.getText().toString();
+        Intent intent = new Intent(ChannelRegisterActivity.this, RoleActivity.class);
+        String room = channelNumber.getText().toString();
         config().setChannelName(room);
         startActivity(intent);
     }

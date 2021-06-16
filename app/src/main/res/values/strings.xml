@@ -4,7 +4,12 @@
 
     <!-- Main Activity -->
     <string name="start_broadcast_title">Start Live Streaming</string>
+    <string name="register_title">Live Start</string>
+    <string name="register_button">Channel Register</string>
     <string name="topic_edit_hint">Enter a channel name</string>
+    <string name="topic_edit_password">Enter a channel password</string>
+    <string name="topic_edit_channel_number">Register channel number</string>
+    <string name="topic_edit_channel_password">Register channel password</string>
     <string name="powered_by_agora" translatable="false">Powered by agora.io</string>
     <string name="need_necessary_permissions">Necessary permissions acquired</string>
 
@@ -37,4 +42,5 @@
 
     <!-- Legal digits for channel names -->
     <string name="legal_channel_name_characters" translatable="false">&#xA0;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&amp;()+,-:;&lt;=.>?@[]^_`{|}~</string>
+
 </resources>

@@ -32,6 +32,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.ChannelListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ChannelRegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activities.LiveActivity"
             android:screenOrientation="portrait"/>
         <activity
